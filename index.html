@@ -109,6 +109,46 @@
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
   </style>
 </head>
+  <script>
+const form = document.getElementById('applicationForm');
+const successMessage = document.getElementById('successMessage');
+const applicantName = document.getElementById('applicantName');
+
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const button = form.querySelector('[type="submit"]');
+
+    button.disabled = true;
+    button.textContent = 'Submitting...';
+
+    try {
+        const response = await fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(new FormData(form)).toString()
+        });
+
+        if (!response.ok) {
+            throw new Error('Submission failed');
+        }
+
+        applicantName.textContent =
+            form.elements.name.value;
+
+        form.reset();
+        successMessage.hidden = false;
+        button.textContent = 'Application submitted ♥';
+
+    } catch (error) {
+        alert('Submission failed. Please try again.');
+        button.disabled = false;
+        button.textContent = 'Submit my very serious application ♥';
+    }
+});
+</script>
 <body>
   <header class="wrap nav">
     <div class="brand"><span class="brand-mark">♥</span> Girlfriend<span style="color:var(--pink-dark)">™</span></div>
@@ -166,9 +206,20 @@
           <p>Fill in the highly scientific application. Our relationship department (me) will review it with great seriousness.</p>
           <div class="aside-foot">Estimated review time: somewhere between 3 seconds and “when I see this.”</div>
         </aside>
-        <form id="applicationForm" 
-        action="https://formsubmit.co/jonceski032@gmail.com" 
-        method="POST">
+      <form
+  id="applicationForm"
+  name="girlfriend-applications"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+>
+  <input type="hidden" name="form-name" value="girlfriend-applications">
+
+  <p hidden>
+    <label>Don't fill this out:
+      <input name="bot-field">
+    </label>
+  </p>
           <h3 class="form-title">Girlfriend trial application</h3>
           <p class="form-desc">A few essential questions for this very unserious process.</p>
           <div class="field">
@@ -209,7 +260,7 @@
           </label>
           <button class="btn submit" type="submit">Submit my very serious application ♥</button>
           <p class="privacy">Your application will be sent to my email. This is a joke dating website ♥</p>
-          <div class="success" id="successMessage" role="status" aria-live="polite" style="margin-top:18px">
+          <div class="success" id="successMessage" hidden role="status" aria-live="polite" style="margin-top:18px">
             <h3>🎉 Application dramatically received, <span id="applicantName">legend</span>!</h3>
             <p>Your application has been forwarded to the Relationship Department (one guy with a phone). Status: <strong>under review</strong>. Your free trial begins only if we both agree to it. 😉</p>
           </div>
