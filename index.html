@@ -85,7 +85,12 @@
     .checkline input { width: 17px; height: 17px; margin: 1px 0 0; flex: 0 0 auto; accent-color: var(--pink); }
     .submit { width: 100%; }
     .privacy { margin: 11px 0 0; text-align: center; color: #95838e; font-size: .75rem; }
-    .success { display: none; padding: 22px; border: 1px solid #f4c6d7; border-radius: 16px; background: #fff5f8; }
+    .success {
+    padding: 22px;
+    border: 1px solid #f4c6d7;
+    border-radius: 16px;
+    background: #fff5f8;
+}
     .success h3 { margin: 0 0 8px; font-size: 1.35rem; }
     .success p { margin: 0; color: var(--muted); line-height: 1.55; }
     .terms { padding: 28px 0 35px; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; line-height: 1.7; }
@@ -109,46 +114,7 @@
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
   </style>
 </head>
-  <script>
-const form = document.getElementById('applicationForm');
-const successMessage = document.getElementById('successMessage');
-const applicantName = document.getElementById('applicantName');
 
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
-    const button = form.querySelector('[type="submit"]');
-
-    button.disabled = true;
-    button.textContent = 'Submitting...';
-
-    try {
-        const response = await fetch('/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams(new FormData(form)).toString()
-        });
-
-        if (!response.ok) {
-            throw new Error('Submission failed');
-        }
-
-        applicantName.textContent =
-            form.elements.name.value;
-
-        form.reset();
-        successMessage.hidden = false;
-        button.textContent = 'Application submitted ♥';
-
-    } catch (error) {
-        alert('Submission failed. Please try again.');
-        button.disabled = false;
-        button.textContent = 'Submit my very serious application ♥';
-    }
-});
-</script>
 <body>
   <header class="wrap nav">
     <div class="brand"><span class="brand-mark">♥</span> Girlfriend<span style="color:var(--pink-dark)">™</span></div>
@@ -277,7 +243,46 @@ form.addEventListener('submit', async (event) => {
     <span>© 2026 Girlfriend™ — Romance, now in beta.</span>
     <span>Made with questionable confidence and ♥</span>
   </footer>
+  <script>
+const form = document.getElementById('applicationForm');
+const successMessage = document.getElementById('successMessage');
+const applicantName = document.getElementById('applicantName');
 
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const button = form.querySelector('[type="submit"]');
+
+    button.disabled = true;
+    button.textContent = 'Submitting...';
+
+    try {
+        const response = await fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(new FormData(form)).toString()
+        });
+
+        if (!response.ok) {
+            throw new Error('Submission failed');
+        }
+
+        applicantName.textContent =
+            form.elements.name.value;
+
+        form.reset();
+        successMessage.hidden = false;
+        button.textContent = 'Application submitted ♥';
+
+    } catch (error) {
+        alert('Submission failed. Please try again.');
+        button.disabled = false;
+        button.textContent = 'Submit my very serious application ♥';
+    }
+});
+</script>
  
 </body>
 </html>
